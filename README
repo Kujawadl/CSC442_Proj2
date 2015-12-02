@@ -10,7 +10,8 @@ Context-Free Grammar
 <alpha> ::= a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z
 <nonzero> ::= 1|2|3|4|5|6|7|8|9
 <digit> ::= 0|<nonzero>
-<action> ::= GRAB ( {<coordinate>|<id>} ) | MOVE ( {<coordinate>|<id>,(<coordinate>)} ) | DROP | PRINT
+<action> ::= GRAB ( {<coordinate>|<id>} ) | UNSTACK ( {<coordinate>|<id>} ) | 
+  MOVE ( <coordinate> ) | DROP | STACK | PRINT
 <eolcomment> ::= //
 <startcomment> ::= /*
 <endcomment> ::= */
@@ -24,26 +25,30 @@ BLOCKS {
 	arm();
 };
 MOVES [
-	GRAB(var1);
+	MOVE(1,1);
+  GRAB(var1);
 	MOVE(2,2);
 	DROP;
-	MOVE(var2,(2,2));	//Short for GRAB(var2); MOVE(2,2); DROP;
+	MOVE(1,2);
+  GRAB(var2);
+  MOVE(2,2);
+  STACK;
 	//Errors:
-	GRAB(var1);		//ERROR: var 1 not at top of stack
-	MOVE(6,5);		//ERROR: (6,5) not located within proj2
-	DROP;			//ERROR: not holding anything
+	UNSTACK(var1); //ERROR: var 1 not at top of stack
+	MOVE(6,5);     //ERROR: (6,5) not located within proj2
+	DROP;          //ERROR: not holding anything
 ];
 
 Example output (from code above excluding errors):
 Initial position:
-  # blocks stacked / location:
+  # blocks / location:
          1  2  3  4  5
       1  1  1  _  _  _
       2  _  _  _  1  _
       3  _  _  _  _  _
       4  _  _  _  _  _
       5  _  _  _  _  _
-  Stack contents:
+  Location contents:
     (1,1):
         var1
     (1,2):
@@ -52,15 +57,16 @@ Initial position:
         var3
 
 Final position:
-  # blocks stacked / location:
+  # blocks / location:
          1  2  3  4  5
       1  _  _  _  _  _
       2  _  2  _  1  _
       3  _  _  _  _  _
       4  _  _  _  _  _
       5  _  _  _  _  _
-  Stack contents:
+  Location contents:
     (2,2):
+      STACK:
       [top]
         var2
         var1
