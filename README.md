@@ -17,27 +17,27 @@
 > <endcomment> ::= */
 
 # Sample Program:
-  WORLD proj2(5,5):
-  BLOCKS {
-  	var1(1,1);
-  	var2(1,2);
-  	var3(2,4);
-  	arm();
-  };
-  MOVES [
-  	MOVE(1,1);
+    WORLD proj2(5,5):
+    BLOCKS {
+    	var1(1,1);
+    	var2(1,2);
+    	var3(2,4);
+    	arm();
+    };
+    MOVES [
+    	MOVE(1,1);
     GRAB(var1);
-  	MOVE(2,2);
-  	DROP;
-  	MOVE(1,2);
+    	MOVE(2,2);
+    	DROP;
+    	MOVE(1,2);
     GRAB(var2);
     MOVE(2,2);
     STACK;
-  	//Errors:
-  	UNSTACK(var1); //ERROR: var 1 not at top of stack
-  	MOVE(6,5);     //ERROR: (6,5) not located within proj2
-  	DROP;          //ERROR: not holding anything
-  ];
+    	//Errors:
+    	UNSTACK(var1); //ERROR: var 1 not at top of stack
+    	MOVE(6,5);     //ERROR: (6,5) not located within proj2
+    	DROP;          //ERROR: not holding anything
+    ];
 
 # Example output (from code above excluding errors):
     Initial position:
