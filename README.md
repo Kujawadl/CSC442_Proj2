@@ -1,4 +1,13 @@
-## Context-Free Grammar
+## To do:
+ - [x] Write Scanner
+ - [ ] Add comment recognition to Scanner
+ - [ ] Test Scanner
+ - [ ] Write Parser
+ - [ ] Test Parser
+ - [ ] Write Interpreter (Project2.java)
+ - [ ] Test sample programs/error checking
+
+## Context-Free Grammar:
     <program> ::= WORLD <variable>: BLOCKS { <declarations> }; MOVES [ <actions> ];
     <declarations> ::= {<variable>;}* <arm>;
     <actions> ::= <action>; {<action>;}*
