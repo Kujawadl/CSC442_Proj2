@@ -1,5 +1,5 @@
 ## To do:
- - [x] Write Scanner
+ - [x] ~~Write Scanner~~
  - [ ] Add comment recognition to Scanner
  - [ ] Test Scanner
  - [ ] Write Parser
