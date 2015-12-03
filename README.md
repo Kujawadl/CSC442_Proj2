@@ -8,12 +8,21 @@ Project 2 serves to create and implement a language using a context-free grammar
  - the interpreter, which takes the intermediate code and runs through it line-by-line
 If at any point an error is encountered, the current program stops and does not pass along its input to the next stage of compilation. It would not make sense to try and interpret code that has not been parsed properly; similarly, it would not make sense to parse a program containing unexpected/unhandled tokens.
 
+## Contents:
+ - [Status](#status)
+ - [To do](#todo)
+ - [Context-Free Grammar](#cfg)
+ - [Sample Program](program)
+ - [Sample Output](output)
+
+<a name="status" />
 ## Status:
 Currently, a roughly working version of the scanner has been written, although it is not the best looking code in terms of documentation and cosmetics. Not all features of the scanner have been implemented yet, however it has been tested and verified to return the given program's tokens correctly (it does not split single tokens into multiple or combine multiple tokens into one).
 
 No work has been done on the parser or the interpreter to date.
 
-## To do:
+<a name="todo" />
+## To Do:
  - [x] ~~Write Scanner~~
  - [ ] Add comment recognition to Scanner
  - [ ] Test Scanner
@@ -23,6 +32,7 @@ No work has been done on the parser or the interpreter to date.
  - [ ] Test sample programs/error checking
  - [ ] Write/Maintain debug code throughout all classes!
 
+<a name="cfg" />
 ## Context-Free Grammar:
     <program> ::= WORLD <variable>: BLOCKS { <declarations> }; MOVES [ <actions> ];
     <declarations> ::= {<variable>;}* <arm>;
@@ -41,6 +51,7 @@ No work has been done on the parser or the interpreter to date.
     <startcomment> ::= /*
     <endcomment> ::= */
 
+<a name="program" />
 ## Sample Program:
     WORLD proj2(5,5):
     BLOCKS {
@@ -64,6 +75,7 @@ No work has been done on the parser or the interpreter to date.
     	DROP;          //ERROR: not holding anything
     ];
 
+<a name="output" />
 ## Example output (from code above excluding errors):
     Initial position:
         # blocks / location:
