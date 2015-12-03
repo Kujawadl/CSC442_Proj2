@@ -1,4 +1,4 @@
-# Context-Free Grammar
+## Context-Free Grammar
     <program> ::= WORLD <variable>: BLOCKS { <declarations> }; MOVES [ <actions> ];
     <declarations> ::= {<variable>;}* <arm>;
     <actions> ::= <action>; {<action>;}*
@@ -16,7 +16,7 @@
     <startcomment> ::= /*
     <endcomment> ::= */
 
-# Sample Program:
+## Sample Program:
     WORLD proj2(5,5):
     BLOCKS {
     	var1(1,1);
@@ -39,7 +39,7 @@
     	DROP;          //ERROR: not holding anything
     ];
 
-# Example output (from code above excluding errors):
+## Example output (from code above excluding errors):
     Initial position:
         # blocks / location:
                1  2  3  4  5
