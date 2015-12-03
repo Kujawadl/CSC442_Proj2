@@ -76,7 +76,7 @@ No work has been done on the parser or the interpreter to date.
     ];
 
 <a name="output" />
-## Sample output (from code above excluding errors):
+## Sample Output (from code above excluding errors):
     Initial position:
         # blocks / location:
                1  2  3  4  5
