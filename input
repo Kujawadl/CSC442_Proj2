@@ -7,11 +7,11 @@ BLOCKS {
 };
 MOVES [
 	MOVE(1,1);
-  GRAB(var1);
+	GRAB(var1);
 	MOVE(2,2);
 	DROP;
 	MOVE(1,2);
-  GRAB(var2);
-  MOVE(2,2);
-  STACK;
+	GRAB(var2);
+	MOVE(2,2);
+	STACK;
 ];
