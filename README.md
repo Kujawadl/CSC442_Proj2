@@ -1,20 +1,20 @@
 # Context-Free Grammar
-> <program> ::= WORLD <variable>: BLOCKS { <declarations> }; MOVES [ <actions> ];
-> <declarations> ::= {<variable>;}* <arm>;
-> <actions> ::= <action>; {<action>;}*
-> <variable> ::= <id> ( <coordinate> )
-> <arm> ::= arm ( <coordinate> ) | arm ()
-> <coordinate> ::= <location>, <location>
-> <location> ::= <nonzero> {<digit>}*
-> <id> ::= <alpha> {<alpha>|<digit>}*
-> <alpha> ::= a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z
-> <nonzero> ::= 1|2|3|4|5|6|7|8|9
-> <digit> ::= 0|<nonzero>
-> <action> ::= GRAB ( {<coordinate>|<id>} ) | UNSTACK ( {<coordinate>|<id>} ) | 
->   MOVE ( <coordinate> ) | DROP | STACK | PRINT
-> <eolcomment> ::= //
-> <startcomment> ::= /*
-> <endcomment> ::= */
+    <program> ::= WORLD <variable>: BLOCKS { <declarations> }; MOVES [ <actions> ];
+    <declarations> ::= {<variable>;}* <arm>;
+    <actions> ::= <action>; {<action>;}*
+    <variable> ::= <id> ( <coordinate> )
+    <arm> ::= arm ( <coordinate> ) | arm ()
+    <coordinate> ::= <location>, <location>
+    <location> ::= <nonzero> {<digit>}*
+    <id> ::= <alpha> {<alpha>|<digit>}*
+    <alpha> ::= a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z
+    <nonzero> ::= 1|2|3|4|5|6|7|8|9
+    <digit> ::= 0|<nonzero>
+    <action> ::= GRAB ( {<coordinate>|<id>} ) | UNSTACK ( {<coordinate>|<id>} ) | 
+      MOVE ( <coordinate> ) | DROP | STACK | PRINT
+    <eolcomment> ::= //
+    <startcomment> ::= /*
+    <endcomment> ::= */
 
 # Sample Program:
     WORLD proj2(5,5):
