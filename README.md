@@ -12,8 +12,8 @@ If at any point an error is encountered, the current program stops and does not 
  - [Status](#status)
  - [To do](#todo)
  - [Context-Free Grammar](#cfg)
- - [Sample Program](program)
- - [Sample Output](output)
+ - [Sample Program](#program)
+ - [Sample Output](#output)
 
 <a name="status" />
 ## Status:
