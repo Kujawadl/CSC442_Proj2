@@ -44,6 +44,12 @@ Currently, a roughly working version of the scanner has been written, although i
 
 No work has been done on the parser or the interpreter to date.
 
+The language was changed from java to C++ in order to implement a Makefile, which will allow Dr. Strader to quickly and easily compile the code with all the same flags. This also makes documentation easier, as instructions for how to run are essentially
+```
+make
+blocks input
+```
+
 <a name="todo" />
 ## To Do:
  - [x] ~~Write Scanner~~
