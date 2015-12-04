@@ -51,9 +51,9 @@ No work has been done on the parser or the interpreter to date.
  - [ ] Test Scanner
  - [ ] Write Parser
  - [ ] Test Parser
- - [ ] Write Interpreter (Project2.java)
+ - [ ] Write Interpreter
  - [ ] Test sample programs/error checking
- - [ ] Write/Maintain debug code throughout all classes!
+ - [ ] Write/Maintain debug code throughout all classes! (Ongoing)
 
 <a name="cfg" />
 ## Context-Free Grammar:
