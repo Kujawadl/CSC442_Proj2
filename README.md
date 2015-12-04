@@ -144,7 +144,7 @@ Block World supports the following actions:
  - DROP;
  - STACK;
  - PRINT;
-Note that the Block World interpreter will automatically output the initial and final positions of all blocks, in addition to the relevant compilation or debugging output (if desired).
+ Note that the Block World interpreter will automatically output the initial and final positions of all blocks, in addition to the relevant compilation or debugging output (if desired).
 
 <a name="program" />
 ## Sample Program:
