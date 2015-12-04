@@ -35,6 +35,11 @@ If at any point an error is encountered, the current program stops and does not 
  - [Status](#status)
  - [To do](#todo)
  - [Context-Free Grammar](#cfg)
+ - [Syntax Overview](#syntax)
+  - [Comments](#comments)
+  - [Program Layout](#layout)                                                                        
+  - [Block Declarations](#block)
+  - [Move Commands](#moves)
  - [Sample Program](#program)
  - [Sample Output](#output)
 
@@ -82,6 +87,65 @@ blocks input
 <endcomment> ::= */
 ```
 
+<a name="syntax" />
+## Syntax Overview
+<a name="comments"/>
+### Comments
+Block World uses c-style comments:  
+```
+// This is an inline comment.
+/*
+  This is a
+  multi-line
+  comment
+*/
+```  
+Note that nested comments are not supported.
+
+<a name="layout" />
+### Program Layout
+Block World programs are divided into three sections:
+ 1. The world declaration, wherein the world is named and given dimensions
+ 2. The block declaratons, wherein all block objects are declared and initialized
+ 3. The move commands, which control the robot arm to move blocks between locations.  
+The structure is roughly as follows:  
+```
+WORLD id(#,#):
+BLOCKS { ... };
+MOVES [ ... ];
+```
+As you will see in the examples below, Blocks World uses the braces and punctuation to differentiate various parts of code; new lines are ignored. For example, the one-line `MOVES [ ... ];` statement above can be rewritten as  
+```
+MOVES [
+...
+];
+``` 
+or even
+```
+MOVES
+[
+...
+];
+```  
+Similarly, tabs and indentation are ignored, and are purely for cosmetic purposes. By convention, all declarations and statements within `BLOCKS{};` or `MOVES[];` statements should be indented one tab, to indicate that they fall within that program block's domain.
+
+<a name="block" />
+### Block Declarations
+All blocks are declared using an id, which is any string beginning with a letter, followed by one or more alphanumeric characters. Following the id is the initial location of the block, written as a coordinate, for example, `(1,2)`. Coordinates are numbered from 1 to the size of the specified dimension. Finally, the declaration ends with a semicolon. See the sample program below for examples.
+
+The last declaration in the `BLOCKS` section must be `arm()`. Note that by default, arm starts at location (1,1). However, an initial location for arm may also be declared by supplying a coordinate instead of the empty parentheses, e.g. `arm(2,3);`.
+
+<a name="moves" />
+### Move Commands
+Block World supports the following actions:
+ - MOVE ( coordinate );
+ - GRAB ( coordinate or id );
+ - UNSTACK ( coordinate or id );
+ - DROP;
+ - STACK;
+ - PRINT;  
+Note that the Block World interpreter will automatically output the initial and final positions of all blocks, in addition to the relevant compilation or debugging output (if desired).
+
 <a name="program" />
 ## Sample Program:
 ```
@@ -94,13 +158,13 @@ BLOCKS {
 };
 MOVES [
 	MOVE(1,1);
-GRAB(var1);
+  GRAB(var1);
 	MOVE(2,2);
 	DROP;
 	MOVE(1,2);
-GRAB(var2);
-MOVE(2,2);
-STACK;
+  GRAB(var2);
+  MOVE(2,2);
+  STACK;
 	//Errors:
 	UNSTACK(var1); //ERROR: var 1 not at top of stack
 	MOVE(6,5);     //ERROR: (6,5) not located within proj2
