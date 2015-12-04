@@ -133,7 +133,7 @@ Similarly, tabs and indentation are ignored, and are purely for cosmetic purpose
 ### Block Declarations
 All blocks are declared using an id, which is any string beginning with a letter, followed by one or more alphanumeric characters. Following the id is the initial location of the block, written as a coordinate, for example, `(1,2)`. Coordinates are numbered from 1 to the size of the specified dimension. Finally, the declaration ends with a semicolon. See the sample program below for examples.
 
-The last declaration in the `BLOCKS` section must be `arm()`. Note that by default, arm starts at location (1,1). However, an initial location for arm may also be declared by supplying a coordinate instead of the empty parentheses, e.g. `arm(2,3);`.
+The last declaration in the `BLOCKS` section must be `arm()`. Note that by default, arm starts at location `(1,1)`. However, an initial location for arm may also be declared by supplying a coordinate instead of the empty parentheses, e.g. `arm(2,3);`.
 
 <a name="moves" />
 ### Move Commands
