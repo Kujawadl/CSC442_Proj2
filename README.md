@@ -25,7 +25,7 @@ Markdown supports HTML code and comments as well.
 ### Dylan Jager-Kujawa and Matt Richardson
 ---
 
-Project 2 serves to create and implement a language using a context-free grammar. The language is interpreted using three java programs: 
+Project 2 serves to create and implement a language using a context-free grammar. The language is interpreted using three programs: 
  - the scanner, which reads the input programs and returns a sequence of tokens
  - the parser, which reads the tokens, generates symbol and constant tables, an error table (if necessary), and returns an intermediate language, similar to assembly
  - the interpreter, which takes the intermediate code and runs through it line-by-line
