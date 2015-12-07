@@ -9,6 +9,7 @@
 class LAScanner {
 	public:
 		LAScanner(std::string fileName);
+		LAScanner();
 		std::string getInputTable();
 		int getLineNumber();
 		std::string peek();
