@@ -15,13 +15,10 @@ tokens as defined by the grammar in the handout.
 
 */
 
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <stdexcept>
 #include "LAScanner.hpp"
 
 #define DEBUG
+#undef DEBUG
 
 LAScanner::LAScanner(std::string fileName) {
 	#ifdef DEBUG
@@ -63,6 +60,8 @@ LAScanner::LAScanner(std::string fileName) {
 	std::cerr << "Leaving LAScanner constructor." << std::endl;
 	#endif
 }
+
+LASCanner() {}
 
 // Return the original program as a string.
 std::string LAScanner::getInputTable() {
@@ -221,8 +220,10 @@ bool LAScanner::isSymbol(char c) {
 	}
 }
 
+#ifdef DEBUG
 int main (int c, char** v) {
 	LAScanner scanner = LAScanner("input");
 	while (scanner.peek().compare("") != 0)
 		std::cout << scanner.nextToken() << std::endl;
 }
+#endif

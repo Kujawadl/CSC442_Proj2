@@ -1,6 +1,11 @@
 #ifndef LASCANNER
 #define LASCANNER
 
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <stdexcept>
+
 class LAScanner {
 	public:
 		LAScanner(std::string fileName);
