@@ -27,6 +27,7 @@ RDParser::RDParser(std::string fileName) {
 
 	scan = LAScanner(fileName);
 	errors = false;
+	arm_val = "";
 
 	program();
 
@@ -113,7 +114,7 @@ void RDParser::printWorld() {
 				std::cout << std::setw(3) << i;
 			// Otherwise, print stack size. If 0, print "-"
 			else {
-				int num = world[(j - 1) + (i - 1) * y].size();
+				int num = world[(j - 1) + (i - 1) * x].size();
 				if (num == 0) 
 					std::cout << std::setw(3) << "-";
 				else
@@ -130,7 +131,7 @@ void RDParser::printWorld() {
 	for (int i = 0; i <= y; i++) {
 		// For each column
 		for (int j = 0; j <= x; j++) {
-			std::stack<std::string> current = world[(j - 1) + (i - 1) * y];
+			std::stack<std::string> current = world[(j - 1) + (i - 1) * x];
 			// If only one element, just print that element
 			if (current.size() == 1) {
 				std::cout << "    " << "(" << j << "," << i << "):" << std::endl;
@@ -244,7 +245,7 @@ void RDParser::declarations() {
 			error("Expected ;", line);
 		// Add name to world at location, assuming within range
 		if (*loc != -1 && loc[0]*loc[1] <= x*y) {
-			world[(loc[0] - 1) + (loc[1] - 1) * y].push(name);
+			world[(loc[0] - 1) + (loc[1] - 1) * x].push(name);
 		} else if (*loc == -1) {
 			error("Expected coordinate", line);
 		} else {
