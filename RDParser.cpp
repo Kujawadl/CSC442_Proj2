@@ -49,7 +49,7 @@ void RDParser::error(std::string message, int lineNumber) {
 
 	#ifdef DEBUG
 	std::cerr << "Leaving error function. Next token is " << scan.peek() \
-		<< " at line " << scan.getLineNumber() << std::endl;
+		<< " at line " << scan.getLineNumber() << std::endl << std::endl;
 	#endif
 }
 
@@ -74,7 +74,8 @@ void RDParser::printErrors() {
 	if (!errors) {
 		errors = true;
 		errList.insert(errList.end(), "No errors generated.");
-		errList.insert(errList.end(), "These messages test printErrors() functionality.");
+		errList.insert(errList.end(), "These messages test printErrors() functionality");
+		errList.insert(errList.end(), "when no real errors are present.");
 	}
 	#endif
 
@@ -87,8 +88,90 @@ void RDParser::printErrors() {
 	std::cout << std::endl;
 }
 
+void RDParser::printWorld() {
+	#ifdef DEBUG
+	std::cerr << "Entering printWorld(). Adding two elements to stack at (1,1)" << std::endl;
+	world[0].push("debug1");
+	world[0].push("debug2");
+	#endif
+
+	// Print out a diagram of the grid, representing the # of blocks per space
+	std::cout << "# blocks in each position:" << std::endl;
+	// For each row
+	for (int i = 0; i <= y; i++) {
+		std::cout << "    ";
+		// For each column
+		for (int j = 0; j <= x; j++) {
+			// If upper-left corner, print nothing
+			if (i == 0 && j == 0)
+				std::cout << "   ";
+			// If column header, print column number
+			else if (i == 0)
+				std::cout << std::setw(3) << j;
+			// If row header, print row number
+			else if (j == 0)
+				std::cout << std::setw(3) << i;
+			// Otherwise, print stack size. If 0, print "-"
+			else {
+				int num = world[(j - 1) + (i - 1) * y].size();
+				if (num == 0) 
+					std::cout << std::setw(3) << "-";
+				else
+					std::cout << std::setw(3) << num;
+			}
+		}
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
+
+	// Print out the contents of any nonempty spaces
+	std::cout << "Location contents:" << std::endl;
+	// For each row
+	for (int i = 0; i <= y; i++) {
+		// For each column
+		for (int j = 0; j <= x; j++) {
+			std::stack<std::string> current = world[(j - 1) + (i - 1) * y];
+			// If only one element, just print that element
+			if (current.size() == 1) {
+				std::cout << "    " << "(" << j << "," << i << "):" << std::endl;
+				std::cout << "\t" << current.top() << std::endl;
+			// If stack, print all elements in a stack format
+			} else if (current.size() > 1) {
+				std::cout << "    " << "(" << j << "," << i << "):" << std::endl;
+				std::cout << "\t" << "[top]" << std::endl;
+				std::stack<std::string> reverse; // Reverse of the current stack
+				// For every element in stack
+				while (current.size() > 0) {
+					// Print the element
+					std::cout << "\t    " << current.top() << std::endl;
+					// Add the element to the reverse stack
+					reverse.push(current.top());
+					// Pop
+					current.pop();
+				}
+				std::cout << "\t" << "[bottom]" << std::endl;
+				// Restore current stack to original state
+				// For each element in reverse stack
+				while (reverse.size() > 0) {
+					// Add to current stack
+					current.push(reverse.top());
+					// Pop
+					reverse.pop();
+				}
+			}
+		}
+	}
+	std::cout << std::endl;
+
+	#ifdef DEBUG
+	std::cerr << "Leaving printWorld()" << std::endl << std::endl;
+	#endif
+}
+
 void RDParser::print() {
-	
+	printInput();
+	printErrors();
+	printWorld();
 }
 
 void RDParser::program() {
@@ -194,10 +277,6 @@ void RDParser::declarations() {
 		error("Expected ;", scan.getLineNumber());
 }
 
-void RDParser::actions() {
-
-}
-
 // Expects a coordinate value; returns 2-element array containing {x, y}.
 // Returns -1 on error.
 int* RDParser::coordinate() {
@@ -240,7 +319,7 @@ int* RDParser::coordinate() {
 	}
 
 	#ifdef DEBUG
-	std::cerr << "Returning (" << dim[0] << "," << dim[1] << ") from coordinate()" << std::endl;
+	std::cerr << "Returning (" << dim[0] << "," << dim[1] << ") from coordinate()" << std::endl << std::endl;
 	#endif
 
 	return dim;
@@ -296,7 +375,7 @@ int* RDParser::arm() {
 	}
 
 	#ifdef DEBUG
-	std::cerr << "Returning (" << dim[0] << "," << dim[1] << ") from arm()" << std::endl;
+	std::cerr << "Returning (" << dim[0] << "," << dim[1] << ") from arm()" << std::endl << std::endl;
 	#endif
 
 	return dim;
@@ -327,11 +406,15 @@ std::string RDParser::id() {
 	}
 
 	#ifdef DEBUG
-	std::cerr << "Token passed id check; returning." << std::endl;
+	std::cerr << "Token passed id check; returning." << std::endl << std::endl;
 	#endif
 
 	// If no errors, return name
 	return name;
+}
+
+void RDParser::actions() {
+
 }
 
 void RDParser::action() {
@@ -340,6 +423,5 @@ void RDParser::action() {
 
 int main (int c, char** v) {
 	RDParser parser("input");
-	parser.printInput();
-	parser.printErrors();
+	parser.print();
 }
