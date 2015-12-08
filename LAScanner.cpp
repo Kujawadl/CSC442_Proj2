@@ -142,15 +142,33 @@ std::string LAScanner::nextToken() {
 		<< next << ", respectively." << std::endl;
 	#endif
 
-	//Handle comments.
+	// Handle one-line comments.
 	if (curr == '/' && next == '/') {
 		try {
+			// Set pos to position of next newline character
 			while (charQueue.at(pos) != '\n')
 				pos++;
+			// Continue finding tokens
 			return nextToken();
 		} catch (std::out_of_range& e) {
 			#ifdef DEBUG
 			std::cerr << "nextToken() out of bounds while looking for \\n" << std::endl;
+			#endif
+			pos++;
+		}
+	// Handle multi-line comments.
+	} else if (curr == '/' && next == '*') {
+		try {
+			// Set pos to position of the * in next */
+			while (charQueue.at(pos) != '*' || charQueue.at(pos + 1) != '/')
+				pos++;
+			// Skip over */
+			pos += 2;
+			// Continue finding tokens
+			return nextToken();
+		} catch (std::out_of_range& e) {
+			#ifdef DEBUG
+			std::cerr << "nextToken() out of bounds while looking for */" << std::endl;
 			#endif
 			pos++;
 		}
