@@ -177,10 +177,10 @@ MOVES [
 Initial position:
     # blocks / location:
            1  2  3  4  5
-        1  1  1  _  _  _
-        2  _  _  _  1  _
+        1  1  _  _  _  _
+        2  1  _  _  _  _
         3  _  _  _  _  _
-        4  _  _  _  _  _
+        4  _  1  _  _  _
         5  _  _  _  _  _
     Location contents:
       (1,1):
@@ -194,9 +194,9 @@ Final position:
     # blocks / location:
            1  2  3  4  5
         1  _  _  _  _  _
-        2  _  2  _  1  _
+        2  _  2  _  _  _
         3  _  _  _  _  _
-        4  _  _  _  _  _
+        4  _  1  _  _  _
         5  _  _  _  _  _
 Location contents:
     (2,2):
