@@ -1,3 +1,18 @@
+/*
+
+Dylan Jager-Kujawa
+Matt Richardson
+
+Dr. Strader
+CSC 442
+8 December 2015
+
+Blocks World
+
+LAScanner.hpp
+
+*/
+
 #ifndef LASCANNER
 #define LASCANNER
 

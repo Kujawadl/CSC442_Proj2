@@ -89,7 +89,7 @@ Note that nested comments are not supported.
 ### Program Layout
 Block World programs are divided into three sections:
  1. The world declaration, wherein the world is named and given dimensions
- 2. The block declaratons, wherein all block objects are declared and initialized
+ 2. The block declarations, wherein all block objects are declared and initialized
  3. The move commands, which control the robot arm to move blocks between locations.  
 The structure is roughly as follows:  
 ```

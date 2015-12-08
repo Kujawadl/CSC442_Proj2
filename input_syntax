@@ -1,0 +1,28 @@
+/**
+Dylan Jager-Kujawa and Matt Richardson
+Block World Sample Input
+*/
+
+WORLD proj2(5,6):	// Declare world with dimensions 5x6
+BLOCKS {
+	Var1(1,1);		// var1 declaration
+	var2(1,2);		// var2 declaration
+	var3(2,4);		// var3 declaration
+	var4(1);
+	arm();			// Default arm location = (1,1)
+};
+MOVES [
+	MOVE(1,1);		// Move arm to (1,1) (unnecessary)
+	GRAB(var1);		// Pickup var1
+	MOVE(2,2);		// Move arm to (2,2)
+	DROP;			// Drop var1
+	MOVE(1,2);		// Move arm to (1,2)
+	GRAB(var2);		// Pickup var2
+	PRINT;
+	MOVE(2,2);		// Move arm to (2,2)
+	STACK;			// Stack var2 on var1
+	//Errors:
+	//UNSTACK(var1);	//ERROR: var 1 not at top of stack
+	//MOVE(6,5);		//ERROR: (6,5) not located within proj2
+	//DROP;			//ERROR: not holding anything
+];

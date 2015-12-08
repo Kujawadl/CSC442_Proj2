@@ -100,6 +100,7 @@ std::string LAScanner::peek() {
 	return retVal;
 }
 
+// Get the next token and reposition the pointer to "dequeue" said token.
 std::string LAScanner::nextToken() {
 	#ifdef DEBUG
 	std::cerr << "Entering nextToken()." << std::endl;
@@ -235,6 +236,7 @@ std::string LAScanner::nextToken() {
 	return retVal;
 }
 
+// Check if character is a recognized symbol
 bool LAScanner::isSymbol(char c) {
 	#ifdef DEBUG
 	std::cerr << "Entering isSymbol()" << std::endl;
@@ -258,6 +260,7 @@ bool LAScanner::isSymbol(char c) {
 
 #undef DEBUG
 #ifdef DEBUG
+// Used for debugging/testing the scanner by printing each token on its own line.
 int main (int c, char** v) {
 	LAScanner scanner = LAScanner("input");
 	while (scanner.peek().compare("") != 0)
