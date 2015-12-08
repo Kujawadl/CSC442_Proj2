@@ -114,7 +114,7 @@ Similarly, tabs and indentation are ignored, and are purely for cosmetic purpose
 
 <a name="block" />
 ### Block Declarations
-All blocks are declared using an id, which is any string beginning with a letter, followed by one or more alphanumeric characters. Following the id is the initial location of the block, written as a coordinate, for example, `(1,2)`. Coordinates are numbered from 1 to the size of the specified dimension. Finally, the declaration ends with a semicolon. See the sample program below for examples.
+All blocks are declared using an id, which is any string beginning with a letter, followed by one or more alphanumeric characters. Id's cannot contain uppercase letters. Following the id is the initial location of the block, written as a coordinate, for example, `(1,2)`. Coordinates are numbered from 1 to the size of the specified dimension. Finally, the declaration ends with a semicolon. See the sample program below for examples.
 
 The last declaration in the `BLOCKS` section must be `arm()`. Note that by default, arm starts at location `(1,1)`. However, an initial location for arm may also be declared by supplying a coordinate instead of the empty parentheses, e.g. `arm(2,3);`.
 
@@ -202,3 +202,13 @@ Location contents:
     (2,4):
         var3
 ```
+
+<a name="difficulties" />
+## Difficulties Encountered
+Initially, the program was specified to have three components, the scanner, the parser, and the interpreter. The parser was originally meant to mimic that of the first project, in that it would keep symbol tables and error tables, an output a pseudo-assembly code that the interpreter would then run. However, it was later discovered that writing a second grammar for the pseudo-assembly language would be too unruly and time consuming, given the constraints of this project, and the idea was scrapped. At that point, the parser was rewritten to act as the interpreter as well.
+
+The algorithms used in the first assignment for calculating line numbers were faulty, as is evident from the project's report. Another large amount of time was dedicated solely to correcting these algorithms. The error handling was also somewhat problematic, as it is extremely difficult to write the compiler such that it "knows" where the error ends, and whether it should continue trying to compile. For example, a serious syntax error such as a missing end bracket in the BLOCKS section could cause the compiler to generate multiple errors for each subsequent line, as those lines would look nothing like what is to be expected of the BLOCKS section. Our utmost effort went into fine-tuning the error handling. It is still not quite where we want it to be ideally, but we believe it is a vast improvement over our previous effort nonetheless.
+
+Another, far more grievous error, was the assumption that the cs server's gcc version would support the C++11 standard. This is not the case. A good deal of time was spent researching and rewriting various C++11 functions that were necessary for the program to function, in order to make sure the program would still work on the C++98 standard of the server. However, upon committing the changes and pulling the repository into the cs server account, we were greeted with strange errors such as st9bad_alloc(). Several hours were spent in gdb trying to ascertain the specific cause of these problems. The general idea was that somewhere around line 138 of RDParser.cpp, a stack object was being declared, and initialized to one of the stack objects in the grid, which worked flawlessly on the newer gcc. However, we could never figure out what to do to make it work with the older gcc version. 
+
+Unfortunately, the possibility of the cs server having an outdated version of gcc was not considered until extremely late into the project, after the project was pulled to the server and attempted to run. By this point, it was too late to go for help to the professors in the CS department. All commits regarding C++98 compatibility were reverted, and it was determined that in lieu of submitting the assignment through the cs submit command, submitting it via the GitHub repository would have to suffice. Dylan is available at his school email address 24/7 (kujawadl@jacks.sfasu.edu); if desired, contact him, and he will find another way to get the project submitted (e.g. flash drive, email, etc).
