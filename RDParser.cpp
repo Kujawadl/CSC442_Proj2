@@ -16,7 +16,7 @@ tokens as defined by the grammar in the handout.
 */
 
 #define DEBUG
-//undef DEBUG
+#undef DEBUG
 
 #include "RDParser.hpp"
 
@@ -244,7 +244,7 @@ void RDParser::declarations() {
 		if (scan.nextToken().compare(";") != 0)
 			error("Expected ;", line);
 		// Add name to world at location, assuming within range
-		if (*loc != -1 && loc[0]*loc[1] <= x*y) {
+		if (*loc != -1 && loc[0] <= x && loc[1] <= y) {
 			world[(loc[0] - 1) + (loc[1] - 1) * x].push(name);
 		} else if (*loc == -1) {
 			error("Expected coordinate", line);
@@ -415,11 +415,132 @@ std::string RDParser::id() {
 }
 
 void RDParser::actions() {
+	#ifdef DEBUG
+	std::cerr << "Entering actions()" << std::endl;
+	#endif
 
+	int line = scan.getLineNumber();
+	if (scan.nextToken().compare("MOVES") != 0)
+		error("Expected MOVES", line);
+	line = scan.getLineNumber();
+	if (scan.nextToken().compare("[") != 0)
+		error("Expected [", line);
+	while (scan.peek().compare("]") != 0) {
+		line = scan.getLineNumber();
+		action();
+		if (scan.nextToken().compare(";") != 0)
+			error("Expected ;", line);
+	}
+	scan.nextToken();
+	line = scan.getLineNumber();
+	if (scan.nextToken().compare(";") != 0)
+		error("Expected ;", line);
+
+	#ifdef DEBUG
+	std::cerr << "Leaving actions()" << std::endl;
+	#endif
 }
 
 void RDParser::action() {
+	/* Possible actions:
+		GRAB
+		UNSTACK
+		MOVE
+		DROP
+		STACK
+		PRINT
+	*/
+	int line = scan.getLineNumber();
+	std::string fn = scan.nextToken();
 
+	#ifdef DEBUG
+	std::cerr << "In action() with fn = " << fn << " at line " << line << std::endl;
+	#endif
+
+	if (fn.compare("GRAB") == 0) {
+		#ifdef DEBUG
+		std::cerr << "Entering GRAB checks; arm_val=" << arm_val << ", loc=(" << arm_x << "," \
+			<< arm_y << ")" << std::endl;
+		#endif
+		if (scan.nextToken().compare("(") != 0)
+			error("Expected (", line);
+		std::string name = id();
+		if (scan.nextToken().compare(")") != 0)
+			error("Expected )", line);
+		if (arm_val.compare("") != 0)
+			error("Attempt to unstack while arm is full", line);
+		else if (world[(arm_x - 1) + (arm_y - 1) * x].size() == 0)
+			error("Attempt to grab from an empty space", line);
+		else if (world[(arm_x - 1) + (arm_y - 1) * x].size() > 1)
+			error("Attempt to grab from a stack", line);
+		else if (world[(arm_x - 1) + (arm_y - 1) * x].top().compare(name) != 0)
+			error("Attempt to unstack element not at specified location", line);
+		else {
+			arm_val = name;
+			world[(arm_x - 1) + (arm_y - 1) * x].pop();
+		}
+	} else if (fn.compare("UNSTACK") == 0) {
+		#ifdef DEBUG
+		std::cerr << "Entering UNSTACK checks; arm_val=" << arm_val << ", loc=(" << arm_x << "," \
+			<< arm_y << ")" << std::endl;
+		#endif
+		if (scan.nextToken().compare("(") != 0)
+			error("Expected (", line);
+		std::string name = id();
+		if (scan.nextToken().compare(")") != 0)
+			error("Expected )", line);
+		if (arm_val.compare("") != 0)
+			error("Attempt to unstack while arm is full", line);
+		else if (world[(arm_x - 1) + (arm_y - 1) * x].size() <= 1)
+			error("Attempt to unstack from a non-stack space", line);
+		else if (world[(arm_x - 1) + (arm_y - 1) * x].top().compare(name) != 0)
+			error("Attempt to unstack element not at top of stack", line);
+		else {
+			arm_val = name;
+			world[(arm_x - 1) + (arm_y - 1) * x].pop();
+		}
+	} else if (fn.compare("MOVE") == 0) {
+		#ifdef DEBUG
+		std::cerr << "Entering MOVE checks; arm_val=" << arm_val << ", loc=(" << arm_x << "," \
+			<< arm_y << ")" << std::endl;
+		#endif
+		int* new_loc = coordinate();
+		if (*new_loc != -1 && new_loc[0] <= x && new_loc[1] <= y) {
+			arm_x = new_loc[0];
+			arm_y = new_loc[1];
+		} else {
+			error("Attempt to move to invalid coordinate", line);
+		}
+	} else if (fn.compare("DROP") == 0) {
+		#ifdef DEBUG
+		std::cerr << "Entering DROP checks; arm_val=" << arm_val << ", loc=(" << arm_x << "," \
+			<< arm_y << ")" << std::endl;
+		#endif
+		if (arm_val.compare("") == 0)
+			error("Attempt to drop while arm is empty", line);
+		else if (world[(arm_x - 1) + (arm_y - 1) * x].size() > 1)
+			error("Attempt to drop on a stack", line);
+		else {
+			world[(arm_x - 1) + (arm_y - 1) * x].push(arm_val);
+			arm_val = "";
+		}
+	} else if (fn.compare("STACK") == 0) {
+		#ifdef DEBUG
+		std::cerr << "Entering STACK checks; arm_val=" << arm_val << ", loc=(" << arm_x << "," \
+			<< arm_y << ")" << std::endl;
+		#endif
+		if (arm_val.compare("") == 0)
+			error("Attempt to stack while arm is empty", line);
+		else if (world[(arm_x - 1) + (arm_y - 1) * x].size() == 0)
+			error("Attempt to stack on an empty space", line);
+		else {
+			world[(arm_x - 1) + (arm_y - 1) * x].push(arm_val);
+			arm_val = "";
+		}
+	} else if (fn.compare("PRINT") == 0) {
+		std::cout << "World's state as of line " << line << ":" << std::endl;
+		printWorld();
+	}
 }
 
 int main (int c, char** v) {
