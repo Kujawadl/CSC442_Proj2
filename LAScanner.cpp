@@ -18,7 +18,7 @@ tokens as defined by the grammar in the handout.
 #include "LAScanner.hpp"
 
 #define DEBUG
-#undef DEBUG
+//undef DEBUG
 
 LAScanner::LAScanner(std::string fileName) {
 	#ifdef DEBUG
@@ -84,24 +84,16 @@ int LAScanner::getLineNumber() {
 // Peek at the next token without dequeueing it.
 std::string LAScanner::peek() {
 	int tmp = pos;
+	int line_backup = lineCount;
 	std::string retVal = nextToken();
 	#ifdef DEBUG
 	std::cerr << "In peek()" << std::endl;
 	std::cerr << "nextToken is " << retVal << std::endl;
 	#endif
-	try {
-		// If next token is newline, decrement lineCount to offset effects
-		// of nextToken() and return "".
-		if (charQueue.at(tmp) == '\n')
-			lineCount--;
-	} catch (std::out_of_range& e) {
-		#ifdef DEBUG
-		std::cerr << "peek() attempted to access char out of range." << std::endl;
-		#endif
-		return "";
-	}
 	// Reset the position pointer.
 	pos = tmp;
+	// Reset lineCount
+	lineCount = line_backup;
 	#ifdef DEBUG
 	std::cerr << "Leaving peek()" << std::endl;
 	#endif
@@ -160,8 +152,15 @@ std::string LAScanner::nextToken() {
 	} else if (curr == '/' && next == '*') {
 		try {
 			// Set pos to position of the * in next */
-			while (charQueue.at(pos) != '*' || charQueue.at(pos + 1) != '/')
+			while (charQueue.at(pos) != '*' || charQueue.at(pos + 1) != '/') {
+				if (charQueue.at(pos) == '\n') {
+					lineCount++;
+					#ifdef DEBUG
+					std::cerr << "\t\tINCREMENTING LINECOUNT TO " << lineCount << std::endl;
+					#endif
+				}
 				pos++;
+			}
 			// Skip over */
 			pos += 2;
 			// Continue finding tokens
@@ -174,8 +173,12 @@ std::string LAScanner::nextToken() {
 		}
 	// Handle whitespace.
 	} else if (isspace(curr)) {
-		if (curr == '\n')
+		if (curr == '\n') {
 			lineCount++;
+			#ifdef DEBUG
+			std::cerr << "\t\tINCREMENTING LINECOUNT TO " << lineCount << std::endl;
+			#endif
+		}
 		return nextToken();
 	// Handle letters
 	} else if (isalpha(curr)) {
@@ -250,6 +253,7 @@ bool LAScanner::isSymbol(char c) {
 	}
 }
 
+#undef DEBUG
 #ifdef DEBUG
 int main (int c, char** v) {
 	LAScanner scanner = LAScanner("input");
