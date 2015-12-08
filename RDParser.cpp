@@ -16,7 +16,7 @@ tokens as defined by the grammar in the handout.
 */
 
 #define DEBUG
-#undef DEBUG
+//undef DEBUG
 
 #include "RDParser.hpp"
 
@@ -41,10 +41,10 @@ void RDParser::error(std::string message, int lineNumber) {
 	std::cerr << "Entering error function with message: \"" << message << "\" at line " << lineNumber << std::endl;
 	#endif
 
-	do {
+	while (scan.peek().compare(";") != 0 && scan.peek().compare("]") != 0 \
+	&& scan.peek().compare("}") != 0 && scan.peek().compare("") != 0) {
 		scan.nextToken();
-	} while (scan.peek().compare(";") != 0 || scan.peek().compare("]") != 0 \
-		|| scan.peek().compare("}") != 0 || scan.peek().compare("") != 0);
+	}
 	errList.insert(errList.end(), "Line " + std::to_string(lineNumber) + ": " + message);
 	errors = true;
 
@@ -425,7 +425,7 @@ void RDParser::actions() {
 	line = scan.getLineNumber();
 	if (scan.nextToken().compare("[") != 0)
 		error("Expected [", line);
-	while (scan.peek().compare("]") != 0) {
+	while (scan.peek().compare("]") != 0 && scan.peek().compare("") != 0) {
 		line = scan.getLineNumber();
 		action();
 		if (scan.nextToken().compare(";") != 0)
