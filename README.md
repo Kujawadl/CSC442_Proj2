@@ -186,6 +186,7 @@ Initial position:
         3  _  _  _  _  _
         4  _  1  _  _  _
         5  _  _  _  _  _
+        6  _  _  _  _  _
     Location contents:
       (1,1):
           var1
@@ -202,6 +203,7 @@ Final position:
         3  _  _  _  _  _
         4  _  1  _  _  _
         5  _  _  _  _  _
+        6  _  _  _  _  _
 Location contents:
     (2,2):
         STACK:
