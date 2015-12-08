@@ -66,14 +66,29 @@ void RDParser::printInput() {
 			line++;
 		}
 	}
+	std::cout << std::endl;
 }
 
 void RDParser::printErrors() {
+	#ifdef DEBUG
+	if (!errors) {
+		errors = true;
+		errList.insert(errList.end(), "No errors generated.");
+		errList.insert(errList.end(), "These messages test printErrors() functionality.");
+	}
+	#endif
 
+	std::cout << "Errors: " << std::endl;
+	if (!errors)
+		std::cout << "\t(none)" << std::endl;
+	else 
+		for (int i = 0; i < errList.size(); i++)
+			std::cout << "\t" << errList[i] << std::endl;
+	std::cout << std::endl;
 }
 
 void RDParser::print() {
-
+	
 }
 
 void RDParser::program() {
@@ -326,4 +341,5 @@ void RDParser::action() {
 int main (int c, char** v) {
 	RDParser parser("input");
 	parser.printInput();
+	parser.printErrors();
 }
