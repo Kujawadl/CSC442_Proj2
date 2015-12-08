@@ -33,7 +33,6 @@ If at any point an error is encountered, the current program stops and does not 
 
 ## Contents:
  - [How to Run](#how2)
- - [To Do](#todo)
  - [Context-Free Grammar](#cfg)
  - [Syntax Overview](#syntax)
   - [Comments](#comments)
@@ -46,23 +45,10 @@ If at any point an error is encountered, the current program stops and does not 
 <a name="how2" />
 ## How to Run:
 ```
+git pull https://github.com/Kujawadl/CSC442_Proj2.git
 make
 ./blocks [filename]
 ```
-
-<a name="todo" />
-## To Do:
- - [x] ~~Write Scanner~~
- - [x] ~~Add comment recognition to Scanner~~
- - [ ] Test Scanner
- - [x] ~~Write Parser~~
-  - [x] ~~Write WORLD section~~
-  - [x] ~~Write BLOCKS section~~
-  - [x] ~~Write MOVES section~~
- - [ ] Test Parser
- - [ ] Test sample programs/error checking
- - [x] ~~Fix line number function in Scanner~~
- - [ ] Write/Maintain debug code throughout all classes! (Ongoing)
 
 <a name="cfg" />
 ## Context-Free Grammar:
