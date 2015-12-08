@@ -152,26 +152,33 @@ Note that the Block World interpreter will automatically output the initial and 
 <a name="program" />
 ## Sample Program:
 ```
-WORLD proj2(5,5):
+/**
+Dylan Jager-Kujawa and Matt Richardson
+Block World Sample Input
+*/
+
+WORLD proj2(5,6): // Declare world with dimensions 5x5
 BLOCKS {
-	var1(1,1);
-	var2(1,2);
-	var3(2,4);
-	arm();
+  var1(1,1);      // var1 declaration
+  var2(1,2);      // var2 declaration
+  var3(2,4);      // var3 declaration
+  arm();          // Default arm location = (1,1)
 };
 MOVES [
-  MOVE(1,1);
-  GRAB(var1);
-  MOVE(2,2);
-  DROP;
-  MOVE(1,2);
-  GRAB(var2);
-  MOVE(2,2);
-  STACK;
-  //Errors:
-  UNSTACK(var1); //ERROR: var 1 not at top of stack
-  MOVE(6,5);     //ERROR: (6,5) not located within proj2
-  DROP;          //ERROR: not holding anything
+  MOVE(1,1);      // Move arm to (1,1) (unnecessary)
+  GRAB(var1);     // Pickup var1
+  MOVE(2,2);      // Move arm to (2,2)
+  DROP;           // Drop var1
+  MOVE(1,2);      // Move arm to (1,2)
+  GRAB(var2);     // Pickup var2
+  MOVE(2,2);      // Move arm to (2,2)
+  STACK;          // Stack var2 on var1
+  /* 
+  Errors:
+  UNSTACK(var1);  //ERROR: var 1 not at top of stack
+  MOVE(6,5);      //ERROR: (6,5) not located within proj2
+  DROP;           //ERROR: not holding anything
+  */
 ];
 ```
 
