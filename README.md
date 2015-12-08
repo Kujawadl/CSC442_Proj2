@@ -141,8 +141,8 @@ The last declaration in the `BLOCKS` section must be `arm()`. Note that by defau
 ### Move Commands
 Block World supports the following actions:
  - MOVE ( coordinate );
- - GRAB ( coordinate or id );
- - UNSTACK ( coordinate or id );
+ - GRAB ( id );
+ - UNSTACK ( id );
  - DROP;
  - STACK;
  - PRINT;
