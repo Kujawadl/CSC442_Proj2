@@ -58,9 +58,12 @@ blocks input
 <a name="todo" />
 ## To Do:
  - [x] ~~Write Scanner~~
- - [ ] Add comment recognition to Scanner
+ - [x] Add comment recognition to Scanner
  - [ ] Test Scanner
  - [ ] Write Parser
+  - [x] Write WORLD section
+  - [x] Write BLOCKS section
+  - [ ] Write MOVES section
  - [ ] Test Parser
  - [ ] Test sample programs/error checking
  - [ ] Write/Maintain debug code throughout all classes! (Ongoing)
