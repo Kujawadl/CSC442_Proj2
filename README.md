@@ -32,8 +32,8 @@ Project 2 serves to create and implement a language using a context-free grammar
 If at any point an error is encountered, the current program stops and does not pass along its input to the next stage of compilation. It would not make sense to try and interpret code that has not been parsed properly; similarly, it would not make sense to parse a program containing unexpected/unhandled tokens.
 
 ## Contents:
- - [Status](#status)
- - [To do](#todo)
+ - [How to Run](#how2)
+ - [To Do](#todo)
  - [Context-Free Grammar](#cfg)
  - [Syntax Overview](#syntax)
   - [Comments](#comments)
@@ -43,16 +43,11 @@ If at any point an error is encountered, the current program stops and does not 
  - [Sample Program](#program)
  - [Sample Output](#output)
 
-<a name="status" />
-## Status:
-Currently, a roughly working version of the scanner has been written, although it is not the best looking code in terms of documentation and cosmetics. Not all features of the scanner have been implemented yet, however it has been tested and verified to return the given program's tokens correctly (it does not split single tokens into multiple or combine multiple tokens into one).
-
-The parser is currently capable of processing the WORLD and BLOCKS sections of code, declaring the world and filling it with its initial values. Much work will need to be done to verify this functionality before moving on to the MOVES section, which will likely be the most difficult to implement and test.
-
-The language was changed from java to C++ in order to implement a Makefile, which will allow Dr. Strader to quickly and easily compile the code with all the same flags. This also makes documentation easier, as instructions for how to run are essentially
+<a name="how2" />
+## How to Run:
 ```
 make
-blocks input
+./blocks [filename]
 ```
 
 <a name="todo" />
@@ -66,7 +61,7 @@ blocks input
   - [x] ~~Write MOVES section~~
  - [ ] Test Parser
  - [ ] Test sample programs/error checking
- - [ ] Fix line number function in Scanner
+ - [x] ~~Fix line number function in Scanner~~
  - [ ] Write/Maintain debug code throughout all classes! (Ongoing)
 
 <a name="cfg" />
@@ -147,7 +142,7 @@ Block World supports the following actions:
  - STACK;
  - PRINT;
 
-Note that the Block World interpreter will automatically output the initial and final positions of all blocks, in addition to the relevant compilation or debugging output (if desired).
+Note that the Block World interpreter will automatically output the initial and final positions of all blocks, in addition to the relevant compilation output (the input file w/ line numbers, error table if any).
 
 <a name="program" />
 ## Sample Program:
@@ -157,7 +152,7 @@ Dylan Jager-Kujawa and Matt Richardson
 Block World Sample Input
 */
 
-WORLD proj2(5,6): // Declare world with dimensions 5x5
+WORLD proj2(5,6): // Declare world with dimensions 5x6
 BLOCKS {
   var1(1,1);      // var1 declaration
   var2(1,2);      // var2 declaration
@@ -174,10 +169,10 @@ MOVES [
   MOVE(2,2);      // Move arm to (2,2)
   STACK;          // Stack var2 on var1
   /* 
-  Errors:
-  UNSTACK(var1);  //ERROR: var 1 not at top of stack
-  MOVE(6,5);      //ERROR: (6,5) not located within proj2
-  DROP;           //ERROR: not holding anything
+  //Errors:
+  //UNSTACK(var1);  //ERROR: var 1 not at top of stack
+  //MOVE(6,5);      //ERROR: (6,5) not located within proj2
+  //DROP;           //ERROR: not holding anything
   */
 ];
 ```
