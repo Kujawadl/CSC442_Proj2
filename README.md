@@ -25,10 +25,9 @@ Markdown supports HTML code and comments as well.
 ### Dylan Jager-Kujawa and Matt Richardson
 ---
 
-Project 2 serves to create and implement a language using a context-free grammar. The language is interpreted using three programs: 
+Project 2 serves to create and implement a language using a context-free grammar. The language is interpreted using two programs: 
  - the scanner, which reads the input programs and returns a sequence of tokens
- - the parser, which reads the tokens, generates symbol and constant tables, an error table (if necessary), and returns an intermediate language, similar to assembly
- - the interpreter, which takes the intermediate code and runs through it line-by-line
+ - the parser, which reads the tokens, and runs the code line by line, generating an error list as it does so.
 If at any point an error is encountered, the current program stops and does not pass along its input to the next stage of compilation. It would not make sense to try and interpret code that has not been parsed properly; similarly, it would not make sense to parse a program containing unexpected/unhandled tokens.
 
 ## Contents:
@@ -47,7 +46,7 @@ If at any point an error is encountered, the current program stops and does not 
 ## Status:
 Currently, a roughly working version of the scanner has been written, although it is not the best looking code in terms of documentation and cosmetics. Not all features of the scanner have been implemented yet, however it has been tested and verified to return the given program's tokens correctly (it does not split single tokens into multiple or combine multiple tokens into one).
 
-No work has been done on the parser or the interpreter to date.
+The parser is currently capable of processing the WORLD and BLOCKS sections of code, declaring the world and filling it with its initial values. Much work will need to be done to verify this functionality before moving on to the MOVES section, which will likely be the most difficult to implement and test.
 
 The language was changed from java to C++ in order to implement a Makefile, which will allow Dr. Strader to quickly and easily compile the code with all the same flags. This also makes documentation easier, as instructions for how to run are essentially
 ```
@@ -62,26 +61,24 @@ blocks input
  - [ ] Test Scanner
  - [ ] Write Parser
  - [ ] Test Parser
- - [ ] Write Interpreter
  - [ ] Test sample programs/error checking
  - [ ] Write/Maintain debug code throughout all classes! (Ongoing)
 
 <a name="cfg" />
 ## Context-Free Grammar:
 ```
-<program> ::= WORLD <variable>: BLOCKS { <declarations> }; MOVES [ <actions> ];
+<program> ::= WORLD <id><coordinate>: BLOCKS { <declarations> }; MOVES [ <actions> ];
 <declarations> ::= {<variable>;}* <arm>;
-<actions> ::= <action>; {<action>;}*
-<variable> ::= <id> ( <coordinate> )
-<arm> ::= arm ( <coordinate> ) | arm ()
-<coordinate> ::= <location>, <location>
-<location> ::= <nonzero> {<digit>}*
+<arm> ::= arm {<coordinate> | ()}
+<coordinate> ::= ( <int>, <int> )
 <id> ::= <alpha> {<alpha>|<digit>}*
+<actions> ::= <action>; {<action>;}*
+<action> ::= {GRAB|UNSTACK} {<coordinate>|( <id> )} | MOVE <coordinate> | 
+  DROP | STACK | PRINT
 <alpha> ::= a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z
 <nonzero> ::= 1|2|3|4|5|6|7|8|9
 <digit> ::= 0|<nonzero>
-<action> ::= GRAB ( {<coordinate>|<id>} ) | UNSTACK ( {<coordinate>|<id>} ) | 
-  MOVE ( <coordinate> ) | DROP | STACK | PRINT
+<int> ::= <nonzero> {<digit>}*
 <eolcomment> ::= //
 <startcomment> ::= /*
 <endcomment> ::= */
@@ -158,18 +155,18 @@ BLOCKS {
 	arm();
 };
 MOVES [
-	MOVE(1,1);
+  MOVE(1,1);
   GRAB(var1);
-	MOVE(2,2);
-	DROP;
-	MOVE(1,2);
+  MOVE(2,2);
+  DROP;
+  MOVE(1,2);
   GRAB(var2);
   MOVE(2,2);
   STACK;
-	//Errors:
-	UNSTACK(var1); //ERROR: var 1 not at top of stack
-	MOVE(6,5);     //ERROR: (6,5) not located within proj2
-	DROP;          //ERROR: not holding anything
+  //Errors:
+  UNSTACK(var1); //ERROR: var 1 not at top of stack
+  MOVE(6,5);     //ERROR: (6,5) not located within proj2
+  DROP;          //ERROR: not holding anything
 ];
 ```
 
