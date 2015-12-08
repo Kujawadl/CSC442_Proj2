@@ -61,7 +61,7 @@ LAScanner::LAScanner(std::string fileName) {
 	#endif
 }
 
-LASCanner() {}
+LAScanner::LAScanner() {}
 
 // Return the original program as a string.
 std::string LAScanner::getInputTable() {
@@ -134,7 +134,7 @@ std::string LAScanner::nextToken() {
 		std::cerr << "nextToken() attempted to access char out of " \
 			" range while getting next character." << std::endl;
 		#endif
-			pos++;
+		pos++;
 	}
 	pos++;
 	#ifdef DEBUG
@@ -142,8 +142,20 @@ std::string LAScanner::nextToken() {
 		<< next << ", respectively." << std::endl;
 	#endif
 
+	//Handle comments.
+	if (curr == '/' && next == '/') {
+		try {
+			while (charQueue.at(pos) != '\n')
+				pos++;
+			return nextToken();
+		} catch (std::out_of_range& e) {
+			#ifdef DEBUG
+			std::cerr << "nextToken() out of bounds while looking for \\n" << std::endl;
+			#endif
+			pos++;
+		}
 	// Handle whitespace.
-	if (isspace(curr)) {
+	} else if (isspace(curr)) {
 		if (curr == '\n')
 			lineCount++;
 		return nextToken();
