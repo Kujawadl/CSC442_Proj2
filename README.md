@@ -28,6 +28,7 @@ Markdown supports HTML code and comments as well.
 Project 2 serves to create and implement a language using a context-free grammar. The language is interpreted using two programs: 
  - the scanner, which reads the input programs and returns a sequence of tokens
  - the parser, which reads the tokens, and runs the code line by line, generating an error list as it does so.
+
 If at any point an error is encountered, the current program stops and does not pass along its input to the next stage of compilation. It would not make sense to try and interpret code that has not been parsed properly; similarly, it would not make sense to parse a program containing unexpected/unhandled tokens.
 
 ## Contents:
