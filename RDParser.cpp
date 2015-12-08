@@ -9,22 +9,23 @@ CSC 442
 
 Blocks World
 
-LAScanner.cpp
-Implements the scanner, which reads input character by character and outputs a list of 
-tokens as defined by the grammar in the handout.
+RDParser.cpp
+Implements the parser, which reads input from the scanner and interprets it as executable code.
 
 */
 
 #define DEBUG
-//undef DEBUG
+#undef DEBUG
 
 #include "RDParser.hpp"
 
+// Constructor
 RDParser::RDParser(std::string fileName) {
 	#ifdef DEBUG
 	std::cerr << "In Parser constructor with filename " << fileName << std::endl;
 	#endif
 
+	// Initialize variables
 	scan = LAScanner(fileName);
 	errors = false;
 	arm_val = "";
@@ -36,6 +37,7 @@ RDParser::RDParser(std::string fileName) {
 	#endif
 }
 
+// Add an error to the error list
 void RDParser::error(std::string message, int lineNumber) {
 	#ifdef DEBUG
 	std::cerr << "Entering error function with message: \"" << message << "\" at line " << lineNumber << std::endl;
@@ -50,10 +52,11 @@ void RDParser::error(std::string message, int lineNumber) {
 
 	#ifdef DEBUG
 	std::cerr << "Leaving error function. Next token is " << scan.peek() \
-		<< " at line " << scan.getLineNumber() << std::endl << std::endl;
+		<< std::endl << std::endl;
 	#endif
 }
 
+// Print the input file along with the line numbers
 void RDParser::printInput() {
 	std::cout << "Input file:" << std::endl;
 
@@ -63,13 +66,14 @@ void RDParser::printInput() {
 	// Print the file, appending the line number to the front of each line.
 	if (scan.getInputTable().c_str() != NULL) {
 		while (std::getline(ss, tmp, '\n')) {
-			std::cout << "\t" << std::setw(3) << line << " | " << tmp << std::endl;
+			std::cout << "    " << std::setw(3) << line << " | " << tmp << std::endl;
 			line++;
 		}
 	}
 	std::cout << std::endl;
 }
 
+// Print the list of errors, if any
 void RDParser::printErrors() {
 	#ifdef DEBUG
 	if (!errors) {
@@ -82,10 +86,10 @@ void RDParser::printErrors() {
 
 	std::cout << "Errors: " << std::endl;
 	if (!errors)
-		std::cout << "\t(none)" << std::endl;
+		std::cout << "    (none)" << std::endl;
 	else 
 		for (int i = 0; i < errList.size(); i++)
-			std::cout << "\t" << errList[i] << std::endl;
+			std::cout << "    " << errList[i] << std::endl;
 	std::cout << std::endl;
 }
 
@@ -172,7 +176,8 @@ void RDParser::printWorld() {
 void RDParser::print() {
 	printInput();
 	printErrors();
-	printWorld();
+	if (!errors)
+		printWorld();
 }
 
 void RDParser::program() {
@@ -180,6 +185,8 @@ void RDParser::program() {
 	std::cerr << "Entering <program>" << std::endl;
 	std::cerr << "Starting world declaration:" << std::endl;
 	#endif
+
+	printInput();
 
 	// Always get current line number before popping
 	int line = scan.getLineNumber();
@@ -210,6 +217,10 @@ void RDParser::program() {
 
 	// Expect declarations
 	declarations();
+	if (!errors) {
+		std::cout << "Initial configuration:" << std::endl;
+		printWorld();
+	}
 
 	#ifdef DEBUG
 	std::cerr << "Leaving block declarations" << std::endl << std::endl;
@@ -217,7 +228,14 @@ void RDParser::program() {
 	#endif
 
 	// Expect actions; actions() returns stack machine
-	actions();
+	if (!errors)
+		actions();
+	if (!errors) {
+		std::cout << "Final configuration:" << std::endl;
+		printWorld();
+	} else {
+		printErrors();
+	}
 
 	#ifdef DEBUG
 	std::cerr << "Leaving actions block" << std::endl << std::endl;
@@ -225,39 +243,39 @@ void RDParser::program() {
 }
 
 void RDParser::declarations() {
-	int line = scan.getLineNumber();
 	// Expect BLOCKS
 	if (scan.nextToken().compare("BLOCKS") != 0)
-		error("Expected BLOCKS", line);
-	line = scan.getLineNumber();
+		error("Expected BLOCKS", scan.getLineNumber());
 	// Expect {
 	if (scan.nextToken().compare("{") != 0)
-		error("Expected {", line);
+		error("Expected {", scan.getLineNumber());
 	// While next token is not arm
 	while (scan.peek().compare("arm") != 0) {
-		line = scan.getLineNumber();
 		// Get name
 		std::string name = id();
 		// Get location
 		int* loc = coordinate();
 		// Expect ;
 		if (scan.nextToken().compare(";") != 0)
-			error("Expected ;", line);
+			error("Expected ;", scan.getLineNumber());
 		// Add name to world at location, assuming within range
 		if (*loc != -1 && loc[0] <= x && loc[1] <= y) {
 			world[(loc[0] - 1) + (loc[1] - 1) * x].push(name);
-		} else if (*loc == -1) {
-			error("Expected coordinate", line);
-		} else {
-			error("Invalid coordinate", line);
+		} else if (*loc != -1) {
+			error("Invalid coordinate", scan.getLineNumber());
+			return;
 		}
 		// If next token is }, error (arm not declared)
-		if (scan.peek().compare("}") == 0 || scan.peek().compare("") == 0) 
+		if (scan.peek().compare("}") == 0 || scan.peek().compare("") == 0) {
 			error("Expected arm declaration", scan.getLineNumber());
+			return;
+		}
 	}
 	// Expect arm
-	if (scan.nextToken().compare("arm") != 0) 
-		error("Expected arm declaration)", scan.getLineNumber());
+	if (scan.nextToken().compare("arm") != 0) {
+		error("Expected arm declaration", scan.getLineNumber());
+		return;
+	}
 	// Get arm location
 	int* armloc = arm();
 	// If armloc is -1, set armloc to default (1,1)
@@ -268,14 +286,20 @@ void RDParser::declarations() {
 	arm_x = armloc[0];
 	arm_y = armloc[1];
 	// Expect ;
-	if (scan.nextToken().compare(";") != 0)
+	if (scan.nextToken().compare(";") != 0) {
 		error("Expected ;", scan.getLineNumber());
+		return;
+	}
 	// Expect }
-	if (scan.nextToken().compare("}") != 0)
+	if (scan.nextToken().compare("}") != 0) {
 		error("Expected }", scan.getLineNumber());
+		return;
+	}
 	// Expect ;
-	if (scan.nextToken().compare(";") != 0)
+	if (scan.nextToken().compare(";") != 0) {
 		error("Expected ;", scan.getLineNumber());
+		return;
+	}
 }
 
 // Expects a coordinate value; returns 2-element array containing {x, y}.
@@ -290,28 +314,35 @@ int* RDParser::coordinate() {
 
 	try {
 		// Expect (
-		if (scan.nextToken().compare("(") != 0)
+		if (scan.nextToken().compare("(") != 0) {
 			error("Expected (", line);
+			*dim = -1;
+			return dim;
 		// Try and get x
-		else
+		} else
 			dim[0] = stoi(scan.nextToken());
 		#ifdef DEBUG
 		std::cerr << "Got X value: " << dim[0] << std::endl;
 		#endif
 
 		// Expect ,
-		if (scan.nextToken().compare(",") != 0)
+		if (scan.nextToken().compare(",") != 0) {
 			error ("Expected ,", line);
+			*dim = -1;
+			return dim;
 		// Try and get y
-		else 
+		} else
 			dim[1] = stoi(scan.nextToken());
 		#ifdef DEBUG
 		std::cerr << "Got Y value: " << dim[1] << std::endl;
 		#endif
 
 		// Expect ):
-		if (scan.nextToken().compare(")") != 0)
+		if (scan.nextToken().compare(")") != 0) {
 			error ("Expected )", line);
+			*dim = -1;
+			return dim;
+		}
 	} catch (std::exception &e) {
 		error("Expected integer within coordinate declaration", line);
 		// On error, return -1
@@ -338,8 +369,11 @@ int* RDParser::arm() {
 
 	try {
 		// Expect (
-		if (scan.nextToken().compare("(") != 0)
+		if (scan.nextToken().compare("(") != 0) {
 			error("Expected (", line);
+			*dim = -1;
+			return dim;
+		}
 		if (scan.peek().compare(")") == 0) {
 			#ifdef DEBUG
 			std::cerr << "Arm declared using default value (1,1)" << std::endl;
@@ -356,8 +390,11 @@ int* RDParser::arm() {
 		#endif
 
 		// Expect ,
-		if (scan.nextToken().compare(",") != 0)
+		if (scan.nextToken().compare(",") != 0) {
 			error ("Expected ,", line);
+			*dim = -1;
+			return dim;
+		}
 		// Try and get y
 		else 
 			dim[1] = stoi(scan.nextToken());
@@ -366,8 +403,11 @@ int* RDParser::arm() {
 		#endif
 
 		// Expect ):
-		if (scan.nextToken().compare(")") != 0)
+		if (scan.nextToken().compare(")") != 0) {
 			error ("Expected )", line);
+			*dim = -1;
+			return dim;
+		}
 	} catch (std::exception &e) {
 		error("Expected integer within arm declaration", line);
 		// On error, return -1
@@ -463,10 +503,11 @@ void RDParser::action() {
 			<< arm_y << ")" << std::endl;
 		#endif
 		if (scan.nextToken().compare("(") != 0)
-			error("Expected (", line);
+			error("Expected (", scan.getLineNumber());
 		std::string name = id();
 		if (scan.nextToken().compare(")") != 0)
-			error("Expected )", line);
+			error("Expected )", scan.getLineNumber());
+		line = scan.getLineNumber();
 		if (arm_val.compare("") != 0)
 			error("Attempt to unstack while arm is full", line);
 		else if (world[(arm_x - 1) + (arm_y - 1) * x].size() == 0)
@@ -485,10 +526,11 @@ void RDParser::action() {
 			<< arm_y << ")" << std::endl;
 		#endif
 		if (scan.nextToken().compare("(") != 0)
-			error("Expected (", line);
+			error("Expected (", scan.getLineNumber());
 		std::string name = id();
 		if (scan.nextToken().compare(")") != 0)
-			error("Expected )", line);
+			error("Expected )", scan.getLineNumber());
+		line = scan.getLineNumber();
 		if (arm_val.compare("") != 0)
 			error("Attempt to unstack while arm is full", line);
 		else if (world[(arm_x - 1) + (arm_y - 1) * x].size() <= 1)
@@ -505,17 +547,18 @@ void RDParser::action() {
 			<< arm_y << ")" << std::endl;
 		#endif
 		int* new_loc = coordinate();
-		if (*new_loc != -1 && new_loc[0] <= x && new_loc[1] <= y) {
+		if (*new_loc != -1 && new_loc[0] <= x && new_loc[1] <= y && new_loc[0] > 0 && new_loc[1] > 0) {
 			arm_x = new_loc[0];
 			arm_y = new_loc[1];
 		} else {
-			error("Attempt to move to invalid coordinate", line);
+			error("Attempt to move to invalid coordinate", scan.getLineNumber());
 		}
 	} else if (fn.compare("DROP") == 0) {
 		#ifdef DEBUG
 		std::cerr << "Entering DROP checks; arm_val=" << arm_val << ", loc=(" << arm_x << "," \
 			<< arm_y << ")" << std::endl;
 		#endif
+		line = scan.getLineNumber();
 		if (arm_val.compare("") == 0)
 			error("Attempt to drop while arm is empty", line);
 		else if (world[(arm_x - 1) + (arm_y - 1) * x].size() > 1)
@@ -529,6 +572,7 @@ void RDParser::action() {
 		std::cerr << "Entering STACK checks; arm_val=" << arm_val << ", loc=(" << arm_x << "," \
 			<< arm_y << ")" << std::endl;
 		#endif
+		line = scan.getLineNumber();
 		if (arm_val.compare("") == 0)
 			error("Attempt to stack while arm is empty", line);
 		else if (world[(arm_x - 1) + (arm_y - 1) * x].size() == 0)
@@ -538,12 +582,15 @@ void RDParser::action() {
 			arm_val = "";
 		}
 	} else if (fn.compare("PRINT") == 0) {
-		std::cout << "World's state as of line " << line << ":" << std::endl;
+		std::cout << "World's state as of line " << scan.getLineNumber() << ":" << std::endl;
 		printWorld();
 	}
 }
 
 int main (int c, char** v) {
-	RDParser parser("input");
-	parser.print();
+	if (c != 2) {
+		std::cout << "Usage: " << v[0] << " [input file]" << std::endl;
+		exit(1);
+	}
+	RDParser parser(v[1]);
 }

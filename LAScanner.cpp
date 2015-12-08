@@ -18,7 +18,7 @@ tokens as defined by the grammar in the handout.
 #include "LAScanner.hpp"
 
 #define DEBUG
-//undef DEBUG
+#undef DEBUG
 
 LAScanner::LAScanner(std::string fileName) {
 	#ifdef DEBUG
@@ -46,7 +46,7 @@ LAScanner::LAScanner(std::string fileName) {
 			charQueue += in;
 		fileIn.close();
 	} catch (FileNotFoundException& e) {
-		std::cerr << "File \"" + fileName + "\" does not exist!";
+		std::cerr << "File \"" + fileName + "\" does not exist!" << std::endl;
 		exit (EXIT_FAILURE);
 	} catch (std::exception& e) {
 		std::cerr << "Caught unhandled exception." << std::endl << e.what();
@@ -114,7 +114,7 @@ std::string LAScanner::nextToken() {
 	} catch (std::out_of_range& e) {
 		#ifdef DEBUG
 		std::cerr << "nextToken() attempted to access char out of  " \
-			" range while getting current character." << std::endl;
+			"range while getting current character." << std::endl;
 		#endif
 		return "";
 	}
@@ -124,7 +124,7 @@ std::string LAScanner::nextToken() {
 	} catch (std::out_of_range& e) {
 		#ifdef DEBUG
 		std::cerr << "nextToken() attempted to access char out of " \
-			" range while getting next character." << std::endl;
+			"range while getting next character." << std::endl;
 		#endif
 		pos++;
 	}
@@ -219,6 +219,9 @@ std::string LAScanner::nextToken() {
 			std::cerr << "Undefined character: " << next << std::endl;
 			#endif
 		}
+	// Handle known symbols
+	} else if (isSymbol(curr)) {
+		retVal = curr;
 	// Handle all other characters
 	} else {
 		retVal += curr;
