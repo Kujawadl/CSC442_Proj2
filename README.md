@@ -58,14 +58,15 @@ blocks input
 <a name="todo" />
 ## To Do:
  - [x] ~~Write Scanner~~
- - [x] Add comment recognition to Scanner
+ - [x] ~~Add comment recognition to Scanner~~
  - [ ] Test Scanner
- - [ ] Write Parser
-  - [x] Write WORLD section
-  - [x] Write BLOCKS section
-  - [ ] Write MOVES section
+ - [x] ~~Write Parser~~
+  - [x] ~~Write WORLD section~~
+  - [x] ~~Write BLOCKS section~~
+  - [x] ~~Write MOVES section~~
  - [ ] Test Parser
  - [ ] Test sample programs/error checking
+ - [ ] Fix line number function in Scanner
  - [ ] Write/Maintain debug code throughout all classes! (Ongoing)
 
 <a name="cfg" />
@@ -77,7 +78,7 @@ blocks input
 <coordinate> ::= ( <int>, <int> )
 <id> ::= <alpha> {<alpha>|<digit>}*
 <actions> ::= <action>; {<action>;}*
-<action> ::= {GRAB|UNSTACK} {<coordinate>|( <id> )} | MOVE <coordinate> | 
+<action> ::= {GRAB|UNSTACK} ( <id> ) | MOVE <coordinate> | 
   DROP | STACK | PRINT
 <alpha> ::= a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z
 <nonzero> ::= 1|2|3|4|5|6|7|8|9
