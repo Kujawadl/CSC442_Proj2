@@ -32,6 +32,7 @@ Project 2 serves to create and implement a language using a context-free grammar
 If at any point an error is encountered, the current program stops and does not pass along its input to the next stage of compilation. It would not make sense to try and interpret code that has not been parsed properly; similarly, it would not make sense to parse a program containing unexpected/unhandled tokens.
 
 ## Contents:
+
  - [How to Run](#how2)
  - [Context-Free Grammar](#cfg)
  - [Syntax Overview](#syntax)
@@ -43,7 +44,9 @@ If at any point an error is encountered, the current program stops and does not 
  - [Sample Output](#output)
 
 <a name="how2" />
+
 ## How to Run:
+
 ```
 git pull https://github.com/Kujawadl/CSC442_Proj2.git
 make
@@ -51,7 +54,9 @@ make
 ```
 
 <a name="cfg" />
+
 ## Context-Free Grammar:
+
 ```
 <program> ::= WORLD <id><coordinate>: BLOCKS { <declarations> }; MOVES [ <actions> ];
 <declarations> ::= {<variable>;}* <arm>;
@@ -71,9 +76,13 @@ make
 ```
 
 <a name="syntax" />
+
 ## Syntax Overview
+
 <a name="comments"/>
+
 ### Comments
+
 Block World uses c-style comments:  
 ```
 // This is an inline comment.
@@ -86,7 +95,9 @@ Block World uses c-style comments:
 Note that nested comments are not supported.
 
 <a name="layout" />
+
 ### Program Layout
+
 Block World programs are divided into three sections:
  1. The world declaration, wherein the world is named and given dimensions
  2. The block declarations, wherein all block objects are declared and initialized
@@ -113,13 +124,17 @@ MOVES
 Similarly, tabs and indentation are ignored, and are purely for cosmetic purposes. By convention, all declarations and statements within `BLOCKS{};` or `MOVES[];` statements should be indented one tab, to indicate that they fall within that program block's domain.
 
 <a name="block" />
+
 ### Block Declarations
+
 All blocks are declared using an id, which is any string beginning with a letter, followed by one or more alphanumeric characters. Id's cannot contain uppercase letters. Following the id is the initial location of the block, written as a coordinate, for example, `(1,2)`. Coordinates are numbered from 1 to the size of the specified dimension. Finally, the declaration ends with a semicolon. See the sample program below for examples.
 
 The last declaration in the `BLOCKS` section must be `arm()`. Note that by default, arm starts at location `(1,1)`. However, an initial location for arm may also be declared by supplying a coordinate instead of the empty parentheses, e.g. `arm(2,3);`.
 
 <a name="moves" />
+
 ### Move Commands
+
 Block World supports the following actions:
  - MOVE ( coordinate );
  - GRAB ( id );
@@ -131,7 +146,9 @@ Block World supports the following actions:
 Note that the Block World interpreter will automatically output the initial and final positions of all blocks, in addition to the relevant compilation output (the input file w/ line numbers, error table if any).
 
 <a name="program" />
+
 ## Sample Program:
+
 ```
 /**
 Dylan Jager-Kujawa and Matt Richardson
@@ -164,7 +181,9 @@ MOVES [
 ```
 
 <a name="output" />
+
 ## Sample Output (from code above excluding errors):
+
 ```
 Initial position:
     # blocks / location:
@@ -204,7 +223,9 @@ Location contents:
 ```
 
 <a name="difficulties" />
+
 ## Difficulties Encountered
+
 Initially, the program was specified to have three components, the scanner, the parser, and the interpreter. The parser was originally meant to mimic that of the first project, in that it would keep symbol tables and error tables, an output a pseudo-assembly code that the interpreter would then run. However, it was later discovered that writing a second grammar for the pseudo-assembly language would be too unruly and time consuming, given the constraints of this project, and the idea was scrapped. At that point, the parser was rewritten to act as the interpreter as well.
 
 The algorithms used in the first assignment for calculating line numbers were faulty, as is evident from the project's report. Another large amount of time was dedicated solely to correcting these algorithms. The error handling was also somewhat problematic, as it is extremely difficult to write the compiler such that it "knows" where the error ends, and whether it should continue trying to compile. For example, a serious syntax error such as a missing end bracket in the BLOCKS section could cause the compiler to generate multiple errors for each subsequent line, as those lines would look nothing like what is to be expected of the BLOCKS section. Our utmost effort went into fine-tuning the error handling. It is still not quite where we want it to be ideally, but we believe it is a vast improvement over our previous effort nonetheless.
